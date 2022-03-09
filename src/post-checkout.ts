@@ -16,12 +16,14 @@ import { readFileSync } from "fs";
 import renameKeys from "./utils/rename-keys";
 import bashCommand from "./utils/command";
 
+let packageManager: string;
 const getPackageManager = (
   selected: string,
-  hashes: { lockFile: string; hash: string }[]
+  hashes: { lockFile: string; hash: string; packageManager: string }[]
 ) => {
   const selectedItem = head(filter(propEq("hash", selected), hashes));
-  return prop("lockFile", selectedItem);
+
+  return prop("packageManager", selectedItem);
 };
 
 const getHashBeforeUpdate = (fileName: string, showError: boolean = true) => {
@@ -38,9 +40,14 @@ const getHashBeforeUpdate = (fileName: string, showError: boolean = true) => {
 };
 
 const getPackageManagerHash = async () => {
-  const hashesPackages = ["yarn.lock", "package-lock.json", "pnpm-lock.yaml"]
-    .map((lockFile) => ({
+  const hashesPackages = [
+    { lockFile: "yarn.lock", packageManager: "yarn" },
+    { lockFile: "package-lock.json", packageManager: "npm" },
+    { lockFile: "pnpm-lock.yaml", packageManager: "pnpm" },
+  ]
+    .map(({ lockFile, packageManager }) => ({
       lockFile,
+      packageManager,
       hash: getHashBeforeUpdate(lockFile, false),
     }))
     .filter(({ hash }) => Boolean(hash));
@@ -59,9 +66,9 @@ const getPackageManagerHash = async () => {
         hashesPackages
       ),
     });
-
     selectedHash = options.selectedHash;
   }
+  packageManager = getPackageManager(selectedHash, hashesPackages);
   return selectedHash;
 };
 
@@ -79,6 +86,7 @@ const main = async () => {
     return logGreen(`There are no changes in the dependencies ＼（＾ ＾）／`);
   logBlue(`There are changes in the dependencies`);
   logBlue(`running install method`);
-  await bashCommand("npm", ["i"]);
+
+  await bashCommand(packageManager, ["install"]);
 };
 main();
