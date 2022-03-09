@@ -6,10 +6,15 @@ import { filter, includes, pipe, prop, toLower } from "ramda";
 import { promisify } from "util";
 import { logGreen } from "./utils/logs";
 import inquirer from "inquirer";
-const autocompletePrompt = require("inquirer-autocomplete-prompt");
+import autocompletePrompt from "inquirer-autocomplete-prompt";
+
 inquirer.registerPrompt("autocomplete", autocompletePrompt);
 
 const exec = promisify(execCB);
+
+const commitType = process.argv[3] ?? "No type";
+const commitMessageFile = process.argv[2] ?? "No file";
+console.log({ commitType, commitMessageFile });
 
 const pivotalTicketRegex = /\d{9}/g;
 const jiraTicketRegex = /[a-zA-z]+-\d{1,4}/g;
@@ -69,5 +74,4 @@ inquirer.prompt([
   { type: "list", name: "risk", choices: "Low,Medium,High".split(",") },
 ]);
 
-console.log(process.argv);
 main().finally(() => console.log("SUccess"));
