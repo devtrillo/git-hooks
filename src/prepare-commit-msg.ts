@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { exec as execCB } from "child_process";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, write, writeFileSync } from "fs";
 import { filter, includes, pipe, prop, toLower } from "ramda";
 import { promisify } from "util";
 import { logGreen } from "./utils/logs";
@@ -41,7 +41,7 @@ const getCurrentBranch = async () =>
   (await exec("git symbolic-ref -q HEAD"))?.stdout.split("/").pop();
 
 const main = async () => {
-  const commitMsg = readFileSync(process.argv[2])?.toString();
+  const commitMsg = readFileSync(commitMessageFile)?.toString();
   console.log(typeof commitMsg);
   const currentBranch = await getCurrentBranch();
 
@@ -51,19 +51,17 @@ const main = async () => {
     isValid = false,
   } = extractInfoFromBranch(currentBranch) ?? {};
   if (!isValid) return;
+
   if (commitMsg.includes(`[#${ticket}]`))
     return logGreen("There is a ticket number in the commit");
 
   switch (type) {
     case "jira":
-      writeFileSync(process.argv[2], `[#${ticket}] ${commitMsg}`);
+      writeFileSync(commitMessageFile, `[#${ticket}] ${commitMsg}`);
       break;
     case "pivotal":
-      writeFileSync(
-        process.argv[2],
-        `${commitMsg}        
-[#${ticket}]`
-      );
+      if (commitType === "message")
+        writeFileSync(commitMessageFile, commitMsg + `\n [#${ticket}]`);
       break;
     default:
       break;
