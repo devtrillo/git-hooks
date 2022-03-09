@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
 import { exec as execCB } from "child_process";
-import { readFileSync, write, writeFileSync } from "fs";
-import { filter, includes, pipe, prop, toLower } from "ramda";
+import { readFileSync, writeFileSync } from "fs";
+import { prop } from "ramda";
 import { promisify } from "util";
 import { logGreen } from "./utils/logs";
 import inquirer from "inquirer";

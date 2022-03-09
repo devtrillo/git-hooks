@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-import chalk from "chalk";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { filter, head, includes, map, prop, propEq } from "ramda";
@@ -23,7 +22,7 @@ const getPackageManager = (
   return prop("packageManager", selectedItem);
 };
 
-const getHashBeforeUpdate = (fileName: string, showError: boolean = true) => {
+const getHashBeforeUpdate = (fileName: string, showError = true) => {
   try {
     const fileBuffer = readFileSync(fileName);
     const hashSum = createHash("sha256");
