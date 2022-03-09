@@ -2,19 +2,16 @@
 
 import chalk from "chalk";
 import { exec } from "child_process";
-import { compose, filter, has, head, includes, map, prop, propEq } from "ramda";
 import { promisify } from "util";
+import { filter, head, includes, map, prop, propEq } from "ramda";
 import inquirer from "inquirer";
 const execPromise = promisify(exec);
-
-const logGreen = (message: any) => console.log(chalk.green(message));
-const logRed = (message: any) => console.log(chalk.red(message));
-const logBlue = (message: any) => console.log(chalk.blue(message));
 
 import { createHash } from "crypto";
 import { readFileSync } from "fs";
 import renameKeys from "./utils/rename-keys";
 import bashCommand from "./utils/command";
+import { logBlue, logGreen, logRed } from "./utils/logs";
 
 let packageManager: string;
 const getPackageManager = (
