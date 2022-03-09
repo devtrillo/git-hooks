@@ -75,5 +75,10 @@ const main = async () => {
   const hashBeforeUpdate = await getPackageManagerHash();
   await execPromise("git pull");
   const hashAfterUpdate = await getPackageManagerHash();
+  if (hashBeforeUpdate === hashAfterUpdate)
+    return logGreen(`There are no changes in the dependencies ＼（＾ ＾）／`);
+  logBlue(`There are changes in the dependencies`);
+  logBlue(`running install method`);
+  await bashCommand("npm", ["i"]);
 };
 main();
