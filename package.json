@@ -23,6 +23,7 @@
     "esbuild": "^0.14.25",
     "esbuild-node-externals": "^1.4.1",
     "inquirer": "^8.2.1",
+    "inquirer-autocomplete-prompt": "^2.0.0",
     "ramda": "^0.28.0"
   },
   "devDependencies": {
