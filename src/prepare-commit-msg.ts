@@ -14,7 +14,6 @@ const exec = promisify(execCB);
 
 const commitType = process.argv[3] ?? "No type";
 const commitMessageFile = process.argv[2] ?? "No file";
-console.log({ commitType, commitMessageFile });
 
 const pivotalTicketRegex = /\d{9}/g;
 const jiraTicketRegex = /[a-zA-z]+-\d{1,4}/g;
@@ -42,7 +41,7 @@ const getCurrentBranch = async () =>
 
 const main = async () => {
   const commitMsg = readFileSync(commitMessageFile)?.toString();
-  console.log(typeof commitMsg);
+
   const currentBranch = await getCurrentBranch();
 
   const {
@@ -61,15 +60,10 @@ const main = async () => {
       break;
     case "pivotal":
       if (commitType === "message")
-        writeFileSync(commitMessageFile, commitMsg + `\n [#${ticket}]`);
-      break;
-    default:
+        writeFileSync(commitMessageFile, `${commitMsg}\n [#${ticket}]`);
+      else writeFileSync(commitMessageFile, `[#${ticket}]\n${commitMsg}`);
       break;
   }
 };
 
-inquirer.prompt([
-  { type: "list", name: "risk", choices: "Low,Medium,High".split(",") },
-]);
-
-main().finally(() => console.log("SUccess"));
+main().finally(() => console.log("success"));
