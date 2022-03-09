@@ -1,0 +1,16 @@
+{
+  "name": "git-hooks",
+  "version": "1.0.0",
+  "description": "My personal git hooks shared with all of my projects",
+  "main": "index.js",
+  "repository": "https://github.com/devtrillo/git-hooks",
+  "author": "Esteban Trillo <esteban@devtrillo.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "chalk": "4"
+  },
+  "devDependencies": {
+    "eslint": "^8.10.0"
+  }
+}
