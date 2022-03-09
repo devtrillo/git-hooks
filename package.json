@@ -1,16 +1,36 @@
 {
   "name": "git-hooks",
   "version": "1.0.0",
-  "description": "My personal git hooks shared with all of my projects",
-  "main": "index.js",
-  "repository": "https://github.com/devtrillo/git-hooks",
-  "author": "Esteban Trillo <esteban@devtrillo.com>",
-  "license": "MIT",
   "private": true,
+  "description": "My personal git hooks shared with all of my projects",
+  "repository": "https://github.com/devtrillo/git-hooks",
+  "license": "MIT",
+  "author": "Esteban Trillo <esteban@devtrillo.com>",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "node scripts/watch.js",
+    "install:clean": "rm -rf node_modules yarn.lock && yarn",
+    "link:all": "yarn build && scripts/linkAll.js"
+  },
+  "lint-staged": {
+    "package.json": "npx sort-package-json"
+  },
+  "prettier": {},
   "dependencies": {
-    "chalk": "4"
+    "@types/ramda": "^0.28.1",
+    "chalk": "^4",
+    "commander": "^9.0.0",
+    "esbuild": "^0.14.25",
+    "esbuild-node-externals": "^1.4.1",
+    "inquirer": "^8.2.1",
+    "ramda": "^0.28.0"
   },
   "devDependencies": {
-    "eslint": "^8.10.0"
+    "@types/node": "^17.0.21",
+    "eslint": "^8.10.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.5",
+    "prettier": "^2.5.1"
   }
 }
