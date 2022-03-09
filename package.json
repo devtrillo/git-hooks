@@ -6,7 +6,6 @@
   "repository": "https://github.com/devtrillo/git-hooks",
   "license": "MIT",
   "author": "Esteban Trillo <esteban@devtrillo.com>",
-  "main": "index.js",
   "scripts": {
     "build": "node scripts/build.js",
     "dev": "node scripts/watch.js",
