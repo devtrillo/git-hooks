@@ -2,7 +2,7 @@
 
 import { exec } from "child_process";
 import { promisify } from "util";
-import { filter, head, includes, map, prop, propEq } from "ramda";
+import { filter, head, includes, map, pick, prop, propEq } from "ramda";
 import inquirer from "inquirer";
 const execPromise = promisify(exec);
 
@@ -13,13 +13,14 @@ import bashCommand from "./utils/command";
 import { logBlue, logGreen, logRed } from "./utils/logs";
 
 let packageManager: string;
+let packageInstallCommand: string;
 const getPackageManager = (
   selected: string,
-  hashes: { lockFile: string; hash: string; packageManager: string }[]
+  hashes: { lockFile: string; hash: string; packageManager: string,installCommand:string }[]
 ) => {
   const selectedItem = head(filter(propEq("hash", selected), hashes));
 
-  return prop("packageManager", selectedItem);
+  return pick([ "packageManager","installCommand" ], selectedItem);
 };
 
 const getHashBeforeUpdate = (fileName: string, showError = true) => {
@@ -37,14 +38,14 @@ const getHashBeforeUpdate = (fileName: string, showError = true) => {
 
 const getPackageManagerHash = async () => {
   const hashesPackages = [
-    { lockFile: "yarn.lock", packageManager: "yarn" },
-    { lockFile: "package-lock.json", packageManager: "npm" },
-    { lockFile: "pnpm-lock.yaml", packageManager: "pnpm" },
+    { lockFile: "yarn.lock", packageManager: "yarn" ,installCommand:"install --frozen-lockfile"},
+    { lockFile: "package-lock.json", packageManager: "npm" ,installCommand:"ci"},
+    { lockFile: "pnpm-lock.yaml", packageManager: "pnpm" ,installCommand:"i --frozen-lockfile"},
   ]
-    .map(({ lockFile, packageManager }) => ({
+    .map(({ lockFile, packageManager,installCommand }) => ({
       lockFile,
       packageManager,
-      hash: getHashBeforeUpdate(lockFile, false),
+      hash: getHashBeforeUpdate(lockFile, false),installCommand
     }))
     .filter(({ hash }) => Boolean(hash));
 
@@ -64,7 +65,9 @@ const getPackageManagerHash = async () => {
     });
     selectedHash = options.selectedHash;
   }
-  packageManager = getPackageManager(selectedHash, hashesPackages);
+  const result = getPackageManager(selectedHash, hashesPackages);
+packageManager=result.packageManager
+  packageInstallCommand=result.installCommand
   return selectedHash;
 };
 
@@ -83,6 +86,6 @@ const main = async () => {
   logBlue(`There are changes in the dependencies`);
   logBlue(`running install method`);
 
-  await bashCommand(packageManager, ["install"]);
+   bashCommand(packageManager, [packageInstallCommand]);
 };
 main();
