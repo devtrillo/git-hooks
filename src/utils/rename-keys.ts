@@ -1,4 +1,4 @@
-import { curry, reduce, assoc, keys } from "ramda";
+import { assoc, curry, keys, reduce } from "ramda";
 
 /**
  * Creates a new object with the own properties of the provided object, but the

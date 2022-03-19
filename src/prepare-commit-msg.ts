@@ -2,11 +2,12 @@
 
 import { exec as execCB } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
-import { prop } from "ramda";
-import { promisify } from "util";
-import { logGreen } from "./utils/logs";
 import inquirer from "inquirer";
 import autocompletePrompt from "inquirer-autocomplete-prompt";
+import { prop } from "ramda";
+import { promisify } from "util";
+
+import { logGreen } from "./utils/logs";
 
 inquirer.registerPrompt("autocomplete", autocompletePrompt);
 
@@ -20,17 +21,17 @@ const jiraTicketRegex = /[a-zA-z]+-\d{1,4}/g;
 
 const extractInfoFromBranch = (currentBranch: string) => {
   const possibleRegex = [
-    { type: "pivotal", pattern: pivotalTicketRegex },
-    { type: "jira", pattern: jiraTicketRegex },
+    { pattern: pivotalTicketRegex, type: "pivotal" },
+    { pattern: jiraTicketRegex, type: "jira" },
   ];
 
   return possibleRegex
     .map(({ type, pattern }) => {
       const ticket = pattern.exec(currentBranch)?.at(0);
       return {
-        type,
         isValid: !!ticket,
         ticket,
+        type,
       };
     })
     .filter(prop("isValid"))
