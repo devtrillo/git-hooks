@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 
-import { log, logGreen } from "./logs";
+import { logGreen } from "./logs";
 
 /**
  * This function will execute a bash command to the terminal and show the outputs as it's writing them
@@ -14,7 +14,7 @@ const bashCommand = (command: string, args?: string[]) =>
     const cmd = spawn(command, args);
     cmd.stdout.on("data", (data) => logGreen(data.toString()));
 
-    cmd.stderr.on("data", (data) => log(data.toString()));
+    cmd.stderr.on("data", (data) => console.log(data.toString()));
 
     cmd.on("error", (error) => {
       console.log(`error: ${error.message}`);
