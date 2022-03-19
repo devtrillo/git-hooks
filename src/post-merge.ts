@@ -30,5 +30,5 @@ async function main() {
 }
 
 main().then(() => {
-  console.log("Perfectly ran");
+  logGreen("Perfectly ran");
 });
