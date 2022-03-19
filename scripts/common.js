@@ -30,6 +30,7 @@ const commonConfig = {
   color: true,
   entryPoints: [
     "./src/post-checkout.ts",
+    "./src/post-merge.ts",
     "./src/post-commit.ts",
     "./src/prepare-commit-msg.ts",
   ],
