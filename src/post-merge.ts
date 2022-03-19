@@ -5,7 +5,7 @@ import { promisify } from "util";
 
 import bashCommand from "./utils/command";
 import getPackageManager from "./utils/getPackageManager";
-import { logGreen } from "./utils/logs";
+import { logBlue, logGreen } from "./utils/logs";
 
 const exec = promisify(execOld);
 
@@ -30,5 +30,5 @@ async function main() {
 }
 
 main().then(() => {
-  logGreen("Perfectly ran");
+  logBlue("Perfectly ran");
 });
