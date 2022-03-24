@@ -10,7 +10,6 @@
     "build": "node scripts/build.js",
     "dev": "node scripts/watch.js",
     "install:clean": "rm -rf node_modules yarn.lock && yarn",
-    "link:all": "yarn build && scripts/linkAll.js",
     "prepare": "husky install"
   },
   "lint-staged": {
