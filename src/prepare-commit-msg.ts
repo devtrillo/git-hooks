@@ -4,7 +4,7 @@ import { exec as execCB } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
 import inquirer from "inquirer";
 import autocompletePrompt from "inquirer-autocomplete-prompt";
-import { prop } from "ramda";
+import { defaultTo, head, prop } from "ramda";
 import { promisify } from "util";
 
 import { logGreen } from "./utils/logs";
@@ -27,15 +27,16 @@ const extractInfoFromBranch = (currentBranch: string) => {
 
   return possibleRegex
     .map(({ type, pattern }) => {
-      const ticket = pattern.exec(currentBranch)?.at(0);
-      return {
-        isValid: !!ticket,
-        ticket,
-        type,
-      };
+      const matches = currentBranch.match(pattern);
+      return !!matches
+        ? {
+            isValid: true,
+            ticket: head(matches),
+            type,
+          }
+        : { isValid: false };
     })
-    .filter(prop("isValid"))
-    .at(0);
+    .filter(prop("isValid"));
 };
 const getCurrentBranch = async () =>
   (await exec("git symbolic-ref -q HEAD"))?.stdout.split("/").pop();
@@ -49,22 +50,21 @@ const main = async () => {
     ticket,
     type,
     isValid = false,
-  } = extractInfoFromBranch(currentBranch) ?? {};
+  } = extractInfoFromBranch(currentBranch)?.[0] ?? {};
   if (!isValid) return;
 
-  if (commitMsg.includes(`[#${ticket}]`))
+  if (commitMsg.includes(`[#${ticket}]`) || commitMsg.includes(`[${ticket}]`))
     return logGreen("There is a ticket number in the commit");
 
   switch (type) {
     case "jira":
-      writeFileSync(commitMessageFile, `[#${ticket}] ${commitMsg}`);
+      writeFileSync(commitMessageFile, `[${ticket}]\n${commitMsg}`);
       break;
     case "pivotal":
       if (commitType === "message")
         writeFileSync(commitMessageFile, `${commitMsg}\n [#${ticket}]`);
-      else writeFileSync(commitMessageFile, `[#${ticket}]\n${commitMsg}`);
       break;
   }
 };
 
-main().finally(() => console.log("success"));
+main().finally(() => logGreen("Added the commit message successfully"));

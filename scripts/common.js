@@ -33,15 +33,15 @@ const commonConfig = {
     "./src/post-merge.ts",
     "./src/pre-push.ts",
     "./src/post-commit.ts",
-    "./src/prepare-commit-msg.ts"
+    "./src/prepare-commit-msg.ts",
   ],
   outdir: "dist",
   platform: "node",
-  plugins: [nodeExternalsPlugin()]
+  plugins: [nodeExternalsPlugin()],
 };
 
 module.exports = {
   logCompileResult,
   commonConfig,
-  logCompileError
+  logCompileError,
 };
