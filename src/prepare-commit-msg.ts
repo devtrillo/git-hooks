@@ -4,7 +4,7 @@ import { exec as execCB } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
 import inquirer from "inquirer";
 import autocompletePrompt from "inquirer-autocomplete-prompt";
-import { defaultTo, head, prop } from "ramda";
+import { head, prop } from "ramda";
 import { promisify } from "util";
 
 import { logGreen } from "./utils/logs";
@@ -58,7 +58,7 @@ const main = async () => {
 
   switch (type) {
     case "jira":
-      writeFileSync(commitMessageFile, `[${ticket}]\n${commitMsg}`);
+      writeFileSync(commitMessageFile, `[${ticket}] ${commitMsg}`);
       break;
     case "pivotal":
       if (commitType === "message")
