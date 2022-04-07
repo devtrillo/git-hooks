@@ -53,7 +53,7 @@ async function main() {
 
   if (authorizedCreators.find((creator) => creator === branchCreator)) {
     console.log(chalk.greenBright("Pushing your changes"));
-    await exec("git push -u origin master");
+    await exec("git push -u origin HEAD");
     console.log(
       chalk.greenBright("Your changes have been pushed successfully")
     );
